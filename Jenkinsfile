@@ -21,9 +21,15 @@ pipeline {
         }
         success {
             echo 'This will run only if successful'
+            mail to: 'xiaoningli@data.ai',
+             subject: "Success Pipeline: ${currentBuild.fullDisplayName}",
+             body: "It finished successfully ${env.BUILD_URL}"
         }
         failure {
             echo 'This will run only if failed'
+            mail to: 'xiaoningli@data.ai',
+             subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+             body: "Something is wrong with ${env.BUILD_URL}"
         }
         unstable {
             echo 'This will run only if the run was marked as unstable'
