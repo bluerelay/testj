@@ -27,7 +27,7 @@ pipeline {
 
         stage('Deploy - Production') {
             steps {
-                sh './deploy production'
+                sh 'python --version'
             }
         }
     }
