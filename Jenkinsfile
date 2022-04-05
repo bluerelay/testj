@@ -6,6 +6,10 @@ pipeline {
         DB_ENGINE    = 'sqlite'
     }
 
+    options {
+        skipStagesAfterUnstable()
+    }
+
     stages {
         stage('build') {
             steps {
@@ -14,22 +18,35 @@ pipeline {
                 sh 'python --version'
             }
         }
+
+        stage('Sanity check') {
+            steps {
+                input "Does the staging environment look ok?"
+            }
+        }
+
+        stage('Deploy - Production') {
+            steps {
+                sh './deploy production'
+            }
+        }
     }
+
     post {
         always {
             echo 'This will always run'
         }
         success {
             echo 'This will run only if successful'
-            mail to: 'xiaoningli@data.ai',
-             subject: "Success Pipeline: ${currentBuild.fullDisplayName}",
-             body: "It finished successfully ${env.BUILD_URL}"
+            // mail to: 'xiaoningli@data.ai',
+            //  subject: "Success Pipeline: ${currentBuild.fullDisplayName}",
+            //  body: "It finished successfully ${env.BUILD_URL}"
         }
         failure {
             echo 'This will run only if failed'
-            mail to: 'xiaoningli@data.ai',
-             subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
-             body: "Something is wrong with ${env.BUILD_URL}"
+            // mail to: 'xiaoningli@data.ai',
+            //  subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+            ///  body: "Something is wrong with ${env.BUILD_URL}"
         }
         unstable {
             echo 'This will run only if the run was marked as unstable'
